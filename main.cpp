@@ -209,46 +209,65 @@ void moveMeFlat(int i) {
                     0.0f,1.0f,0.0f);
 }
 //---------------------------------------------------------------------------
+void movimentarCavaloParaFrenteOuParaTras(int direcao) {
+  float maiorAngulo = caminhando ? 20.0 : 15.0;
+
+  if (anguloPescoco > maiorAngulo || anguloPescoco < 0.0) {
+    anguloPescocoSubindo = !anguloPescocoSubindo;
+  }
+
+  float incremento = caminhando ? 1.5 : 3.0;
+  anguloPescoco = anguloPescocoSubindo ? anguloPescoco + incremento : anguloPescoco - incremento;
+
+  if (passo < 10) {
+    caminhando ? passo += 2 : passo += 3;
+
+    if (estagio == 0 || estagio == 2) {
+      deslocamentoYTronco += 0.01;
+    }
+    else if (estagio == 1 || estagio == 3) {
+      deslocamentoYTronco -= 0.01;
+    }
+  }
+  else {
+    passo = 0;
+    int estagioFinal = 5;
+
+    if (!caminhando) {
+      estagioFinal = 3;
+    }
+    if (estagio < estagioFinal) {
+      estagio++;
+    }
+    else {
+      estagio = 0;
+    }
+  }
+
+  if (movimentarCavalo) {
+    float deslocamento = caminhando ? 0.03 * direcao : 0.12 * direcao;
+    float anguloGraus = anguloCavalo * (M_PI / 180);
+    xCavalo += deslocamento * cos(anguloGraus);
+    zCavalo -= deslocamento * sin(anguloGraus);
+  }
+}
+//---------------------------------------------------------------------------
 void processNormalKeys(unsigned char key, int x, int y)
 {
   switch(key){
     case 27:
       exit(0);
       break;
-    case 'b': {
-      float maiorAngulo = caminhando ? 20.0 : 15.0;
-      if(anguloPescoco > maiorAngulo || anguloPescoco < 0.0)
-        anguloPescocoSubindo = !anguloPescocoSubindo;
-      float incremento = caminhando ? 1.5 : 3.0;
-      anguloPescoco = anguloPescocoSubindo ? anguloPescoco + incremento : anguloPescoco - incremento;
-      if(passo < 10) {
-        caminhando ? passo +=2 : passo +=3;
-        if(estagio==0 || estagio==2)
-          deslocamentoYTronco += 0.01;
-        else if(estagio==1 || estagio==3)
-          deslocamentoYTronco -= 0.01;
-      } else {
-        passo = 0;
-        int estagioFinal = 5;
-        if(!caminhando)
-          estagioFinal = 3;
-        if(estagio < estagioFinal)
-          estagio++;
-        else
-          estagio = 0;
-      }
-      if(movimentarCavalo){
-        float deslocamento = caminhando ? 0.03 : 0.12;
-        float anguloGraus = anguloCavalo*(M_PI/180);
-        xCavalo += deslocamento*cos(anguloGraus);
-        zCavalo -= deslocamento*sin(anguloGraus);
-      }
+    case 'w':
+      movimentarCavaloParaFrenteOuParaTras(1);
       break;
-    }
-    case ',':
+    case 's':
+      movimentarCavaloParaFrenteOuParaTras(-1);
+      break;
+    case 'a':
       anguloCavalo += 5;
       break;
-    case '.':
+    case 'd':
       anguloCavalo -= 5;
       break;
   }
