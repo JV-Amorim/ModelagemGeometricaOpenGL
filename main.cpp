@@ -46,9 +46,8 @@
 #define ESQUERDA_POSTERIOR 2
 #define DIREITA_POSTERIOR 3
 
-int window;
-int Width;
-int Height;
+int windowWidth = 640;
+int windowHeight = 360;
 
 #define QUADRIL 0
 #define FEMUR 1
@@ -278,38 +277,38 @@ void processNormalKeys(unsigned char key, int x, int y)
 void inputKey(int key, int x, int y) {
 
   switch (key) {
-    case GLUT_KEY_LEFT :
+    case GLUT_KEY_LEFT:
       angle -= 0.05f;
       orientMe(angle);
       break;
-    case GLUT_KEY_RIGHT :
+    case GLUT_KEY_RIGHT:
       angle +=0.05f;
       orientMe(angle);
       break;
-    case GLUT_KEY_UP :
+    case GLUT_KEY_UP:
       moveMeFlat(5);
       break;
-    case GLUT_KEY_DOWN :
+    case GLUT_KEY_DOWN:
       moveMeFlat(-5);
       break;
     case GLUT_KEY_F1:
       deslocamentoYTronco = 0.0;
       caminhando = !caminhando;
       break;
-    case GLUT_KEY_F5:
-      glutFullScreen ( );
+    case GLUT_KEY_F2:
+      movimentarCavalo = !movimentarCavalo;
       break;
-    case GLUT_KEY_F6:
-      glutReshapeWindow ( 640, 360 );
-      break;
-    case GLUT_KEY_F7:
+    case GLUT_KEY_F3:
       iluminacao = !iluminacao;
       break;
-    case GLUT_KEY_F8:
+    case GLUT_KEY_F4:
       arvores = !arvores;
       break;
     case GLUT_KEY_F11:
-      movimentarCavalo = !movimentarCavalo;
+      glutFullScreen();
+      break;
+    case GLUT_KEY_F12:
+      glutReshapeWindow(windowWidth, windowHeight);
       break;
   }
   renderScene();
@@ -324,9 +323,9 @@ int main(int argc, char **argv)
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-  glutInitWindowPosition(100,100);
-  glutInitWindowSize(640,360);
-  glutCreateWindow("Trabalho de computação gráfica");
+  glutInitWindowPosition(100, 100);
+  glutInitWindowSize(windowWidth, windowHeight);
+  glutCreateWindow("Trabalho de Computação Gráfica");
 
   initScene();
 
