@@ -1,0 +1,44 @@
+#define WINDOW_INITIAL_X 100
+#define WINDOW_INITIAL_Y 100
+#define WINDOW_INITIAL_WIDTH 640
+#define WINDOW_INITIAL_HEIGHT 360
+
+#define ESCAPE 27
+#define TAMANHO_ESFERA 0.04
+
+#define ALT_QUADRIL 0.4
+#define LARG_QUADRIL 0.4
+#define COMP_QUADRIL 0.11
+
+#define LARG_TRONCO 2.0
+#define ALT_TRONCO 0.8
+#define COMP_TRONCO 0.5
+
+#define ALT_FEMUR 0.5
+#define LARG_FEMUR 0.2
+#define COMP_FEMUR 0.1
+
+#define ALT_CANELA 0.35
+#define LARG_CANELA 0.1
+#define COMP_CANELA 0.08
+
+#define ALT_PATA 0.15
+#define BASE_PATA 0.1
+
+#define ALT_PESCOCO 0.4
+#define LARG_PESCOCO 1.4
+#define COMP_PESCOCO 0.2
+
+#define ALT_CABECA 0.3
+#define LARG_CABECA 0.4
+#define COMP_CABECA 0.15
+
+#define ESQUERDA_ANTERIOR 0
+#define DIREITA_ANTERIOR 1
+#define ESQUERDA_POSTERIOR 2
+#define DIREITA_POSTERIOR 3
+
+#define QUADRIL 0
+#define FEMUR 1
+#define CANELA 2
+#define PATA 3

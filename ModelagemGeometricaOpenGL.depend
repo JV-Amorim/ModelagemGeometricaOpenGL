@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1639009460 source:c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\main.cpp
+1639235432 source:c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\main.cpp
 	<stdlib.h>
 	<windows.h>
 	<GL/glut.h>
-	<math.h>
+	"cena-cavalo.h"
+	"constantes.h"
 
 1426360528 c:\program files\codeblocks\mingw\include\gl\glut.h
 	"freeglut_std.h"
@@ -18,4 +19,15 @@
 	<GL/gl.h>
 	<GL/glu.h>
 	<stdlib.h>
+
+1639234562 c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\cena-cavalo.h
+	<windows.h>
+	<GL/glut.h>
+	<math.h>
+	"constantes.h"
+
+1639233218 c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\constantes.h
+
+1639235440 source:c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\cena-cavalo.cpp
+	"cena-cavalo.h"
 
