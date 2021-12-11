@@ -1,6 +1,6 @@
 #include "cena-cavalo.h"
 
-// CENA-CAVALO VARIABLES:
+// VARIAVEIS DA CENA:
 
 float anguloCabeca;
 float anguloTronco;
@@ -32,7 +32,7 @@ static float lx = 0.0f, ly = 0.0f, lz = -1.0f;
 
 GLUquadricObj *params = gluNewQuadric();
 
-// "PUBLIC" FUNCTIONS:
+// FUNCOES DE INICIALIZACAO:
 
 void inicializarCena() {
   glEnable(GL_DEPTH_TEST);
@@ -118,6 +118,8 @@ void inicializarAngulos() {
   anguloCabeca = 90.0;
   anguloTronco = -3.75;
 }
+
+// FUNCOES DE SOBREESCRITA OPENGL:
 
 void renderizarCena(void) {
   int i;
@@ -286,7 +288,7 @@ void timer(int value) {
   glutTimerFunc(50, timer, 0);
 }
 
-// "PRIVATE" METHODS:
+// FUNCOES DE MODELAGEM DOS OBJETOS:
 
 void desenharArvore() {
   glColor3f(0.54, 0.4, 0.3);
@@ -486,6 +488,8 @@ void desenharCorpo() {
   glPopMatrix();
 }
 
+// FUNCOES DE CAMERA:
+
 void orientarCamera(float ang) {
   lx = sin(ang);
   lz = - cos(ang);
@@ -499,6 +503,8 @@ void movimentarCamera(int i) {
   glLoadIdentity();
   gluLookAt(x, y, z, x + lx, y + ly, z + lz, 0.0f, 1.0f, 0.0f);
 }
+
+// FUNCAO DE MOVIMENTACAO DO CAVALO:
 
 void movimentarCavaloParaFrenteOuParaTras(int direcao) {
   float maiorAngulo = caminhando ? 20.0 : 15.0;
@@ -543,16 +549,18 @@ void movimentarCavaloParaFrenteOuParaTras(int direcao) {
   }
 }
 
+// FUNCOES AUXILIARES:
+
 float obterAngulo(int posicao, int parte, bool posicaoAtual) {
   int estagioDoAngulo = estagio;
   int estagioFinal = caminhando ? 5 : 3;
   if (!posicaoAtual) {
     if (estagioDoAngulo == estagioFinal) {
       estagioDoAngulo = 0;
-	}
+    }
     else {
       estagioDoAngulo++;
-	}
+    }
   }
 
   float (*vetor)[4][4] = caminhando ? angulosCaminhada : angulosTrote;
