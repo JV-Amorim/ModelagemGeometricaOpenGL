@@ -18,6 +18,10 @@ void processarTeclasEspeciais(int key, int x, int y);
 void processarTeclasNormais(unsigned char key, int x, int y);
 void timer(int value);
 
+// FUNCOES DE ILUMINACAO:
+void ativarLuzPrimaria();
+void ativarLuzAdicional();
+
 // FUNCOES DE MODELAGEM DOS OBJETOS:
 void desenharArvore();
 void desenharCorpo();

@@ -22,6 +22,7 @@ float anguloPescoco = 0.0;
 int anguloPescocoSubindo = 1;
 float xCavalo = 0.0;
 float zCavalo = 1.5;
+bool iluminacaoAdicionalAtivada = true, iluminacaoAdicionalEstado = true;
 bool texturaAtivada = false;
 
 static float angle = 0.0, ratio;
@@ -35,6 +36,9 @@ GLUquadricObj *params = gluNewQuadric();
 void inicializarCena() {
   glEnable(GL_DEPTH_TEST);
   inicializarAngulos();
+  angle = 1.0;
+  orientarCamera(angle);
+  movimentarCamera(-30);
 }
 
 void inicializarAngulos() {
@@ -127,24 +131,8 @@ void renderizarCena(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Iluminacao.
-  GLfloat diffuseLight[] = {1, 1, 1, 1};
-  GLfloat ambientLight[] = {1, 1, 1, 1};
-  GLfloat specularLight[] = {0.2, 0.3, 0.3, 1};
-  GLfloat lightPos[] = {300.0f, 2000.0f, -20.0f, 1.0f};
-  if (iluminacao) {
-    glEnable(GL_LIGHTING);
-  }
-  else {
-    glDisable(GL_LIGHTING);
-  }
-  glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-  glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-  glEnable(GL_LIGHT0);
-  glEnable(GL_COLOR_MATERIAL);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, diffuseLight );
-  glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 50);
+  ativarLuzPrimaria();
+  ativarLuzAdicional();
 
   // Piso.
   glPushMatrix();
@@ -222,7 +210,7 @@ void processarTeclasEspeciais(int key, int x, int y) {
       iluminacao = !iluminacao;
       break;
     case GLUT_KEY_F4:
-      // TODO - Iluminacao adicional.
+      iluminacaoAdicionalAtivada = !iluminacaoAdicionalAtivada;
       break;
     case GLUT_KEY_F5:
       arvores = !arvores;
@@ -288,8 +276,52 @@ void timer(int value) {
       passoRaboSubindo ? passoRabo += 2 : passoRabo -=2;
     }
   }
+  iluminacaoAdicionalEstado = !iluminacaoAdicionalEstado;
   renderizarCena();
   glutTimerFunc(50, timer, 0);
+}
+
+// FUNCOES DE ILUMINACAO:
+
+void ativarLuzPrimaria() {
+  GLfloat diffuseLight[] = {1, 1, 1, 1};
+  GLfloat ambientLight[] = {1, 1, 1, 1};
+  GLfloat specularLight[] = {0.2, 0.3, 0.3, 1};
+  GLfloat lightPos[] = {300.0f, 2000.0f, -20.0f, 1.0f};
+  if (iluminacao) {
+    glEnable(GL_LIGHTING);
+  }
+  else {
+    glDisable(GL_LIGHTING);
+  }
+  glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
+  glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_COLOR_MATERIAL);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, diffuseLight);
+  glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 50);
+}
+
+void ativarLuzAdicional() {
+  if (!iluminacaoAdicionalAtivada || !iluminacaoAdicionalEstado) {
+    glDisable(GL_LIGHT1);
+    return;
+  }
+  GLfloat luzAmbiente[4] = {0.0, 0.0, 5.0, 1.0};
+	GLfloat luzDifusa[4] = {0.0, 0.0, 1.0, 5.0};
+	GLfloat luzEspecular[4] = {0.0, 0.0, 5.0, 1.0};
+	GLfloat posicaoLuz[4] = {0.0, 1.0, 0.0, 1.0};
+  GLfloat direcaoSpot[3] = {1.0, 1.0, 0.0};
+	glLightfv(GL_LIGHT1, GL_AMBIENT, luzAmbiente);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, luzDifusa);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, luzEspecular);
+	glLightfv(GL_LIGHT1, GL_POSITION, posicaoLuz);
+	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 45.0);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direcaoSpot);
+	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 1.0);
+	glEnable(GL_LIGHT1);
 }
 
 // FUNCOES DE MODELAGEM DOS OBJETOS:
@@ -389,7 +421,6 @@ void desenharRabo() {
   glColor3f(1.0, 0.8, 0);
   glTranslatef(0, 0, - 0.25);
   gluCylinder(params, 0.0, 0.015, 0.25, 15, 2);
-
 }
 
 void desenharQuadril(int posicao) {
