@@ -42,6 +42,9 @@
 			<Add library="gdi32" />
 			<Add directory="C:/Program Files/CodeBlocks/MinGW/lib" />
 		</Linker>
+		<Unit filename="cena-cavalo.cpp" />
+		<Unit filename="cena-cavalo.h" />
+		<Unit filename="constantes.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

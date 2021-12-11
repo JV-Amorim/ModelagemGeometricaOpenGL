@@ -1,6 +1,7 @@
 #ifndef CAVALO_H
 #define CAVALO_H
 
+#include <stdio.h>
 #include <windows.h>
 #include <GL/glut.h>
 #include <math.h>
@@ -19,6 +20,7 @@ void timer(int value);
 
 // FUNCOES DE MODELAGEM DOS OBJETOS:
 void desenharArvore();
+void desenharCorpo();
 void desenharEsfera();
 void desenharCabeca();
 void desenharRabo();
@@ -28,7 +30,9 @@ void desenharCanela(int posicao);
 void desenharPata(int posicao);
 void desenharTronco();
 void desenharPerna(int posicao);
-void desenharCorpo();
+
+// FUNCOES DE TEXTURA:
+GLuint carregarTextura(GLuint tex, const char* filename, int width, int height);
 
 // FUNCOES DE CAMERA:
 void orientarCamera(float ang);

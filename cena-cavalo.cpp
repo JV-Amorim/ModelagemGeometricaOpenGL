@@ -171,6 +171,8 @@ void renderizarCena(void) {
     }
   }
 
+  carregarTextura(0, "img/horse-texture.bmp", 900, 900);
+
   glPushMatrix();
     glTranslatef(xCavalo, 0.945, zCavalo);
     glRotatef(anguloCavalo, 0, 1, 0);
@@ -297,6 +299,43 @@ void desenharArvore() {
   glTranslatef(0, 0,2);
   glColor3f(0.14, 0.42, 0.13);
   gluCylinder(params, 0.8, 0.0, 2, 15, 2);
+}
+
+void desenharCorpo() {
+  desenharTronco();
+
+  glPushMatrix();
+  glTranslatef(- LARG_TRONCO * 0.17, ALT_TRONCO * 0.1, COMP_TRONCO * 0.3);
+  desenharEsfera();
+  desenharPerna(ESQUERDA_ANTERIOR);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(LARG_TRONCO * 0.22, - ALT_TRONCO * 0.2, COMP_TRONCO * 0.2);
+  desenharEsfera();
+  desenharPerna(ESQUERDA_POSTERIOR);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(LARG_TRONCO * 0.22, - ALT_TRONCO * 0.2, - COMP_TRONCO * 0.2);
+  desenharEsfera();
+  desenharPerna(DIREITA_POSTERIOR);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(- LARG_TRONCO * 0.17, ALT_TRONCO * 0.1, - COMP_TRONCO * 0.3);
+  desenharEsfera();
+  desenharPerna(DIREITA_ANTERIOR);
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(LARG_TRONCO * 0.25, ALT_TRONCO * 0.2, 0.0);
+  desenharCabeca();
+  glPopMatrix();
+  glPushMatrix();
+  glTranslatef(- LARG_TRONCO * 0.28, ALT_TRONCO * 0.1, 0.0);
+  desenharRabo();
+  glPopMatrix();
 }
 
 void desenharEsfera() {
@@ -451,41 +490,60 @@ void desenharPerna(int posicao) {
   glPopMatrix();
 }
 
-void desenharCorpo() {
-  desenharTronco();
+// FUNCOES DE TEXTURA:
 
-  glPushMatrix();
-  glTranslatef(- LARG_TRONCO * 0.17, ALT_TRONCO * 0.1, COMP_TRONCO * 0.3);
-  desenharEsfera();
-  desenharPerna(ESQUERDA_ANTERIOR);
-  glPopMatrix();
+GLuint carregarTextura(GLuint tex, const char* filename, int width, int height) {
+  unsigned char* data;
+  unsigned char R,G,B;
+  FILE* file;
 
-  glPushMatrix();
-  glTranslatef(LARG_TRONCO * 0.22, - ALT_TRONCO * 0.2, COMP_TRONCO * 0.2);
-  desenharEsfera();
-  desenharPerna(ESQUERDA_POSTERIOR);
-  glPopMatrix();
+  // Abertura do arquivo.
+  file = fopen(filename, "rb");
 
-  glPushMatrix();
-  glTranslatef(LARG_TRONCO * 0.22, - ALT_TRONCO * 0.2, - COMP_TRONCO * 0.2);
-  desenharEsfera();
-  desenharPerna(DIREITA_POSTERIOR);
-  glPopMatrix();
+  // Verificação da existência do arquivo.
+  if(file == NULL) return -1;
 
-  glPushMatrix();
-  glTranslatef(- LARG_TRONCO * 0.17, ALT_TRONCO * 0.1, - COMP_TRONCO * 0.3);
-  desenharEsfera();
-  desenharPerna(DIREITA_ANTERIOR);
-  glPopMatrix();
+  // Alocação de memória para os dados a serem lidos.
+  data = (unsigned char*)malloc(width * height * 3);
+  // Deslocamento no arquivo para ir diretamente aos dados.
+  fseek(file, 128, 0);
+  // Leitura dos dados do arquivo.
+  fread(data, width * height * 3, 1, file);
 
-  glPushMatrix();
-  glTranslatef(LARG_TRONCO * 0.25, ALT_TRONCO * 0.2, 0.0);
-  desenharCabeca();
-  glPopMatrix();
-  glPushMatrix();
-  glTranslatef(- LARG_TRONCO * 0.28, ALT_TRONCO * 0.1, 0.0);
-  desenharRabo();
-  glPopMatrix();
+  // Fechamento do arquivo.
+  fclose(file);
+
+  // Transposição dos valores RGB.
+  int index;
+  for(int i = 0; i < width * height ; ++i) {
+    index = i * 3;
+    B = data[index];
+    G = data[index + 1];
+    R = data[index + 2];
+    data[index] = R;
+    data[index + 1] = G;
+    data[index + 2] = B;
+  }
+
+  // Criação da textura.
+  glGenTextures(1, &tex);
+  glBindTexture(GL_TEXTURE_2D, tex);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+  // Configurações na textura.
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
+
+    // Ativação da textura.
+	glEnable(GL_TEXTURE_2D);
+
+  // Liberação da memória alocada.
+  free(data);
+
+  return 0;
 }
 
 // FUNCOES DE CAMERA:
