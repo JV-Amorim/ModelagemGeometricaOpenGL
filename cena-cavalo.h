@@ -33,6 +33,8 @@ void desenharPerna(int posicao);
 
 // FUNCOES DE TEXTURA:
 GLuint carregarTextura(GLuint tex, const char* filename, int width, int height);
+void ativarOrDesativarGeracaoDeCoordenadasDeTextura(bool ativar);
+void desativarUltimaTexturaCarregada();
 
 // FUNCOES DE CAMERA:
 void orientarCamera(float ang);

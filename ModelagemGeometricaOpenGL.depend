@@ -20,7 +20,7 @@
 	<GL/glu.h>
 	<stdlib.h>
 
-1639237382 c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\cena-cavalo.h
+1639247823 c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\cena-cavalo.h
 	<stdio.h>
 	<windows.h>
 	<GL/glut.h>
@@ -29,6 +29,6 @@
 
 1639233218 c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\constantes.h
 
-1639235440 source:c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\cena-cavalo.cpp
+1639247975 source:c:\users\jvamorim\documents\projetos\c++\modelagemgeometricaopengl\cena-cavalo.cpp
 	"cena-cavalo.h"
 

@@ -6,10 +6,8 @@ float anguloCabeca;
 float anguloTronco;
 float anguloRabo = 0.0;
 float deslocamento = 0.0;
-
 float angulosCaminhada[6][4][4];  // [estagio][posicao][quadril/femur/canela/pata].
 float angulosTrote[6][4][4];
-
 int estagio = 0;
 int passo = 0;  // Valor de 0 a 10.
 int caminhando = 1;
@@ -22,9 +20,9 @@ int iluminacao = 1;
 int arvores = 1;
 float anguloPescoco = 0.0;
 int anguloPescocoSubindo = 1;
-
 float xCavalo = 0.0;
 float zCavalo = 1.5;
+bool texturaAtivada = false;
 
 static float angle = 0.0, ratio;
 static float x = 0.0f, y = 0.75f, z = 5.0f;
@@ -171,8 +169,6 @@ void renderizarCena(void) {
     }
   }
 
-  carregarTextura(0, "img/horse-texture.bmp", 900, 900);
-
   glPushMatrix();
     glTranslatef(xCavalo, 0.945, zCavalo);
     glRotatef(anguloCavalo, 0, 1, 0);
@@ -226,7 +222,13 @@ void processarTeclasEspeciais(int key, int x, int y) {
       iluminacao = !iluminacao;
       break;
     case GLUT_KEY_F4:
+      // TODO - Iluminacao adicional.
+      break;
+    case GLUT_KEY_F5:
       arvores = !arvores;
+      break;
+    case GLUT_KEY_F6:
+      texturaAtivada = !texturaAtivada;
       break;
     case GLUT_KEY_F11:
       glutFullScreen();
@@ -457,6 +459,11 @@ void desenharTronco() {
     glTranslatef(0.0, deslocamentoYTronco, 0.0);
   }
 
+  if (texturaAtivada) {
+    ativarOrDesativarGeracaoDeCoordenadasDeTextura(true);
+    carregarTextura(0, "img/horse-texture.bmp", 900, 900);
+  }
+
   glPushMatrix();
   glColor3f(0.6, 0.4, 0.1);
   glPushMatrix();
@@ -474,6 +481,11 @@ void desenharTronco() {
     glScalef(1, ALT_TRONCO * 1.5, 0.75);
     glutSolidSphere(COMP_TRONCO * 0.335, 8, 8);
   glPopMatrix();
+
+  if (texturaAtivada) {
+    ativarOrDesativarGeracaoDeCoordenadasDeTextura(false);
+    desativarUltimaTexturaCarregada();
+  }
 
   glColor3f(0.6, 0.25, 0.1);
   glPopMatrix();
@@ -531,19 +543,33 @@ GLuint carregarTextura(GLuint tex, const char* filename, int width, int height) 
   gluBuild2DMipmaps(GL_TEXTURE_2D, 3, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
 
   // Configurações na textura.
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
 
-    // Ativação da textura.
-	glEnable(GL_TEXTURE_2D);
+  // Ativação da textura.
+  glEnable(GL_TEXTURE_2D);
 
   // Liberação da memória alocada.
   free(data);
 
   return 0;
+}
+
+void ativarOrDesativarGeracaoDeCoordenadasDeTextura(bool ativar) {
+  if (ativar) {
+    glEnable(GL_TEXTURE_GEN_S);
+    glEnable(GL_TEXTURE_GEN_T);
+    return;
+  }
+  glDisable(GL_TEXTURE_GEN_S);
+  glDisable(GL_TEXTURE_GEN_T);
+}
+
+void desativarUltimaTexturaCarregada() {
+  glDisable(GL_TEXTURE_2D);
 }
 
 // FUNCOES DE CAMERA:
